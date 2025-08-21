@@ -1,3 +1,4 @@
 build
 firmware
 *.tar.bz2
+/proprietary
