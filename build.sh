@@ -34,6 +34,7 @@ Usage () {
     echo "    --console:      Use CLI(default)"
     echo "    --weston-nogpu: Use GUI, but no graphics accelaration"
     echo "    --weston:       Use GUI, Need additonal Graphics pakcage"
+    echo "    --sway:         Use GUI, Need additonal Graphics pakcage"
     echo "options:"
     echo "    -h | --help:          Show this help"
     echo "    -s | --sdk:           Build Yocto SDK"
@@ -54,6 +55,11 @@ for arg in $@; do
         USE_GPU=yes
         TEMPLATE_POSTFIX="-weston"
         TARGET_IMAGE=core-image-minimal
+        CheckGraphicsPackage
+    elif [[ "$arg" == "--sway" ]]; then
+        USE_GPU=yes
+        TEMPLATE_POSTFIX="-weston"
+        TARGET_IMAGE=core-image-sway
         CheckGraphicsPackage
     elif [[ "$arg" == "-h" ]] || [[ "$arg" == "--help" ]]; then
         Usage; exit
@@ -146,6 +152,12 @@ DISTRO_FEATURES_NATIVESDK:append = " wayland"
 DISTRO_FEATURES:append = " pam"
 DISTRO_FEATURES:remove = " x11 vulkan"
 EOS
+fi
+
+if [[ "$TARGET_IMAGE" == "core-image-sway" ]]; then
+    git clone https://codeberg.org/flk/meta-wayland.git ${WORK}/meta-wayland -b scarthgap
+    bitbake-layers add-layer ${WORK}/meta-wayland
+    bitbake-layers add-layer ${SCRIPT_DIR}/meta-wayland-extend
 fi
 
 bitbake ${TARGET_IMAGE}

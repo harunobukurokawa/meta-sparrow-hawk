@@ -1,0 +1,22 @@
+[Unit]
+Description=Sway
+After=systemd-user-sessions.service
+Before=graphical.target
+
+[Service]
+Type=simple
+Environment=WLR_BACKENDS=drm,libinput
+Environment=XDG_RUNTIME_DIR=/run/user/0
+ExecStart=/usr/bin/sway
+Restart=always
+RestartSec=1
+
+# Reuse weston user for automatic login
+User=weston
+Group=weston
+PAMName=sway-autologin
+TTYPath=/dev/tty7
+
+[Install]
+WantedBy=graphical.target
+
