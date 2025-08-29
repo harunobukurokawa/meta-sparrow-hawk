@@ -22,6 +22,7 @@ KCONFIG_MODE = "--alldefconfig"
 KBUILD_DEFCONFIG = "defconfig"
 
 FILESEXTRAPATHS:prepend:sparrow-hawk = "${TOPDIR}/../../firmware:"
+SRC_URI:append:sparrow-hawk = " file://rcar_gen4_pcie.bin;subdir=git/"
 SRC_URI:append:sparrow-hawk = " \
     file://sparrow_hawk.cfg \
     file://sparrow-hawk-enable-i2c3-i2c4.dtsi;subdir=git/arch/arm64/boot/dts/renesas/ \
@@ -62,6 +63,12 @@ do_compile_kernelmodules:append () {
             install -Dm 0644 ${B}/scripts/module.lds ${STAGING_KERNEL_BUILDDIR}/scripts/module.lds
         fi
     fi
+}
+
+FILES:${KERNEL_PACKAGE_NAME}-image += "/boot/System.map"
+do_install:append:sparrow-hawk () {
+    # Install System.map into rootfs
+    install -m 0644 ${B}/System.map ${D}/boot/System.map
 }
 
 do_deploy:append() {
