@@ -49,6 +49,12 @@ SRC_URI:append = "\
     file://nfs_cmd.cfg \
 "
 
+FILESEXTRAPATHS:prepend:sparrow-hawk = "${TOPDIR}/../../firmware:"
+SRC_URI:append:sparrow-hawk = " \
+    file://rcar_gen4_pcie.bin;subdir=git/ \
+    file://0001-sparrow-hawk-Integrate-PCIe-fimeware-into-fitimage.patch \
+"
+
 do_deploy:append() {
     if [ -n "${UBOOT_CONFIG}" ]
     then

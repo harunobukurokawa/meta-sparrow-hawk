@@ -1,0 +1,45 @@
+From 201ed356b04d1fa2e1b1608cccaaa96ac6f77c4c Mon Sep 17 00:00:00 2001
+From: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
+Date: Fri, 29 Aug 2025 17:39:21 +0900
+Subject: [PATCH] sparrow-hawk: Integrate PCIe fimeware into fitimage
+
+By this patch, you can use PCIe on U-Boot by following:
+```
+setenv renesas_rcar_gen4_load_firmware 'setenv renesas_rcar_gen4_load_firmware_addr 0x54000000; setenv renesas_rcar_gen4_load_firmware_size 0x8000'
+pci e
+```
+
+Signed-off-by: Yuya Hamamachi <yuya.hamamachi.sx@renesas.com>
+---
+ arch/arm/dts/r8a779g0-u-boot.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/dts/r8a779g0-u-boot.dtsi b/arch/arm/dts/r8a779g0-u-boot.dtsi
+index cc9d99b0f34..617db059bb8 100644
+--- a/arch/arm/dts/r8a779g0-u-boot.dtsi
++++ b/arch/arm/dts/r8a779g0-u-boot.dtsi
+@@ -118,6 +118,13 @@
+ 								type = "blob-ext";
+ 							};
+ 						};
++						pcie_fw {
++							compression = "none";
++							description = "NAME";
++							type = "firmware";
++							data = /incbin/("../../../rcar_gen4_pcie.bin");
++							load = <0x54000000>;
++						};
+ 					};
+ 
+ 					configurations {
+@@ -127,6 +134,7 @@
+ 							description = "NAME";
+ 							fdt = "fdt-SEQ";
+ 							firmware = "uboot";
++							loadables = "pcie_fw";
+ 						};
+ 					};
+ 				};
+-- 
+2.34.1
+
