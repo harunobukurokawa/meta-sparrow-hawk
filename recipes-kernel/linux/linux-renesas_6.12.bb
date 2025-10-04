@@ -75,3 +75,6 @@ do_deploy:append() {
     done
 }
 
+SRC_URI:append:sparrow-hawk = " \
+    file://usb-displaylink.cfg \
+"
